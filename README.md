@@ -118,3 +118,28 @@ Database drivers for MySQL, Postgres, MongoDB, and Redis are included in the pro
 you will need to download the appropriate driver (e.g. from http://www.oracle.com/technetwork/database/enterprise-edition/jdbc-112010-090769.html?ssSourceSiteId=otnjp),
 add the driver .jar file to the `src/main/webapp/WEB-INF/lib` directory in the project, and re-build the
 application .war file using `./gradlew assemble`.
+
+## Running application on Diego+Docker
+
+This step requires a CF installation with Diego deployed and enabled.
+For being able to run this command locally make sure you have the [diego-cli-plugin](https://github.com/cloudfoundry-incubator/diego-cli-plugin) installed.
+
+~~~
+$ cf docker-push spring-music bonzofenix/spring-music
+$ # Unfortunately docker-push does not support yet to set memory so we need to scale this manually
+$ cf scale spring-music -m 1G
+~~~
+
+## Generating new Docker image
+
+To generate a new image we just need to create the war locally, build and push a new docker image.
+
+~~~
+$ ./gradlew war
+$ docker build  -t docker-user/spring-music .
+$ docker push docker-user/spring-music
+~~~
+
+
+
+
